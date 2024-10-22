@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import fileUpload from "express-fileupload"
+import { errorMiddleware } from "./middleware/error.js"
 
 dotenv.config()
 const app = express()
@@ -13,9 +14,13 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(cors())
-app.use(fileUpload())
+app.use(fileUpload({
+    useTempFiles:true,
+    tempFileDir:"/tmp/"
+}))
 
 dbConnect()
+app.use(errorMiddleware)
 
 
 //default route
